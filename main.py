@@ -12,18 +12,16 @@ dir_path = r'/home/data/'
 ifFilePath=r'/home/data/IF.txt'
 result_file=open(resFile, 'w+')
 with result_file as f:
-    #sys.stdout = f # Change the standard output to the file we created.
-
-    # list to store files
+    
     res = []
 
-    # a. List name of all the text file at location: /home/data
+   
     for path in os.listdir(dir_path):
         if os.path.isfile(os.path.join(dir_path, path)):
             res.append(path)
     result_file.write("Files at location /home/data are:\n")
     
-    #total number of words in each text files
+    
     sum=0
     for path in res:
         result_file.write("->"+path+"\n")
@@ -38,11 +36,11 @@ with result_file as f:
     result_file.write("total number of words in each text files "+str(sum)+"\n")
 
 
-    #top 3 words with maximum number of counts in IF.txt
+
     file = open(ifFilePath, 'r')
     read_data = file.read()
     per_word = read_data.split()
-    #result_file.write(str(per_word)+"\n")
+    
 
     word=[];
     for i in per_word:
