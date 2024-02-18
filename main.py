@@ -1,48 +1,72 @@
 import os
 from collections import Counter
+import string
 import socket
+import sys
 
-# Function to count words in a file and find the top 3 most common words
-def process_file(file_path):
-    with open(file_path, 'r') as file:
-        text = file.read()
-        words = text.split()
-        word_count = len(words)
-        top_three_words = Counter(words).most_common(3)
-    return word_count, top_three_words
+original_stdout = sys.stdout
 
-# Define directories
-data_dir = "/app/home/data"
-output_dir = "/app/home/output"
-output_file_path = os.path.join(output_dir, "result.txt")
+#folder paths
+resFile=r'/home/output/result.txt'
+dir_path = r'/home/data/'
+ifFilePath=r'/home/data/IF.txt'
+result_file=open(resFile, 'w+')
+with result_file as f:
+    
+    res = []
 
-# Ensure output directory exists
-os.makedirs(output_dir, exist_ok=True)
+    
+    for path in os.listdir(dir_path):
+        if os.path.isfile(os.path.join(dir_path, path)):
+            res.append(path)
+    result_file.write("Files at location /home/data are:\n")
+    
+ 
+    sum=0
+    for path in res:
+        result_file.write("->"+path+"\n")
+        file = open("/home/data/"+path, 'r')
+        read_data = file.read()
+        per_word = read_data.split()
+        abc="Total Words:"+str(len(per_word))   
+        #result_file.write(abc+"\n")
+        sum=sum+len(per_word)
 
-# List text files and process each file
-files = [f for f in os.listdir(data_dir) if f.endswith('.txt')]
-total_words = 0
-results = []
 
-for filename in files:
-    file_path = os.path.join(data_dir, filename)
-    word_count, top_three_words = process_file(file_path)
-    total_words += word_count
-    results.append(f"{filename}: {word_count} words")
-    if filename.lower() == "if.txt":
-        top_words_info = "\n".join([f"{word}: {count}" for word, count in top_three_words])
-        results.append(f"Top 3 words in IF.txt:\n{top_words_info}")
+    result_file.write("total number of words in each text files "+str(sum)+"\n")
 
-# Get the IP address
-ip_address = socket.gethostbyname(socket.gethostname())
 
-# Write the results to the output file
-with open(output_file_path, 'w') as output_file:
-    output_file.write("List of text files:\n" + "\n".join(files) + "\n\n")
-    output_file.write("\n".join(results) + "\n")
-    output_file.write(f"Grand Total: {total_words} words\n")
-    output_file.write(f"IP Address: {ip_address}\n")
+    
+    file = open(ifFilePath, 'r')
+    read_data = file.read()
+    per_word = read_data.split()
+    
 
-# Print the contents of the result file
-with open(output_file_path, 'r') as output_file:
-    print(output_file.read())
+    word=[];
+    for i in per_word:
+        a=i.translate(str.maketrans('', '', string.punctuation))
+        a=a.capitalize()
+        word.append(a)
+    Counter = Counter(word)
+    most_occur = Counter.most_common(3)
+    result_file.write("top 3 words with maximum number of counts in IF.txt "+str(most_occur)+"\n")
+
+
+
+
+    hostname=socket.gethostname()
+    IPAddr=socket.gethostbyname(hostname)
+    result_file.write("Your Computer IP Address is:"+IPAddr+"\n")
+    sys.stdout = original_stdout
+result_file.close()
+
+file = open(resFile, 'r',encoding='utf-8')
+print(file.read())
+
+
+
+
+
+
+
+
