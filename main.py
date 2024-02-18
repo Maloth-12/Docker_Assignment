@@ -28,8 +28,7 @@ with result_file as f:
         file = open("/home/data/"+path, 'r')
         read_data = file.read()
         per_word = read_data.split()
-        abc="Total Words:"+str(len(per_word))   
-        #result_file.write(abc+"\n")
+        abc="Total Words:"+str(len(per_word))
         sum=sum+len(per_word)
 
 
